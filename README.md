@@ -4,6 +4,8 @@ GAN-based 4x super-resolution for plant leaf images.
 
 LeafSR packages a Kaggle/coursework experiment into a reproducible PyTorch project. It trains an ESRGAN-lite conditional GAN that predicts a high-resolution residual over a bicubic upsampled leaf image.
 
+Project site: <https://briskam.github.io/leafsr/>
+
 ## Results
 
 Validation was measured with mean absolute error on held-out training images.

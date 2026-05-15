@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="LeafSR is a PyTorch ESRGAN-lite super-resolution project for reconstructing high-resolution plant leaf images from low-resolution inputs."
+    />
+    <meta name="theme-color" content="#0b120e" />
+    <meta property="og:title" content="LeafSR | Plant Leaf Super-Resolution" />
+    <meta
+      property="og:description"
+      content="A resume-ready machine learning case study with PyTorch, ESRGAN-lite, perceptual loss, EMA checkpointing, and test-time augmentation."
+    />
+    <meta property="og:type" content="website" />
+    <title>LeafSR | Plant Leaf Super-Resolution</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="LeafSR home">
+        <span class="brand-mark"></span>
+        LeafSR
+      </a>
+      <nav aria-label="Primary navigation">
+        <a href="#demo">Demo</a>
+        <a href="#model">Model</a>
+        <a href="#results">Results</a>
+        <a href="https://github.com/BriskAM/leafsr">GitHub</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">PyTorch / Computer Vision / Super-Resolution</p>
+          <h1>Recovering plant leaf detail from low-resolution imagery.</h1>
+          <p class="lede">
+            LeafSR packages a Kaggle-style notebook into a reproducible ML system: paired image
+            loading, ESRGAN-lite training, validation metrics, inference scripts, and a visual
+            project frontend.
+          </p>
+          <div class="hero-actions">
+            <a class="button primary" href="https://github.com/BriskAM/leafsr">View source</a>
+            <a class="button" href="#demo">Explore samples</a>
+          </div>
+        </div>
+
+        <div class="hero-panel" aria-label="Project metrics">
+          <div class="metric-card large">
+            <span class="metric-label">Validation MAE</span>
+            <strong>16.89</strong>
+            <span class="metric-note">from 18.20 bicubic baseline</span>
+          </div>
+          <div class="metric-grid">
+            <div class="metric-card">
+              <span class="metric-label">Scale</span>
+              <strong>4x</strong>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Train pairs</span>
+              <strong>1,642</strong>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">Test images</span>
+              <strong>495</strong>
+            </div>
+            <div class="metric-card">
+              <span class="metric-label">TTA</span>
+              <strong>8-way</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="demo" class="section two-column">
+        <div>
+          <p class="eyebrow">Dataset Explorer</p>
+          <h2>Real paired samples from the competition data.</h2>
+          <p>
+            The frontend commits only a few lightweight sample images. The full dataset, VGG
+            weights, checkpoints, and submissions stay out of git.
+          </p>
+          <div class="sample-controls" role="tablist" aria-label="Sample images">
+            <button class="sample-tab active" type="button" data-sample="0">Sample 0000</button>
+            <button class="sample-tab" type="button" data-sample="1">Sample 0005</button>
+            <button class="sample-tab" type="button" data-sample="2">Sample 0010</button>
+          </div>
+        </div>
+
+        <div class="comparison" aria-live="polite">
+          <div class="image-card">
+            <span>Low-res input</span>
+            <img id="lr-image" src="assets/agrivision_train_0000_lr.png" alt="Low-resolution plant leaf input" />
+          </div>
+          <div class="image-card">
+            <span>Bicubic baseline</span>
+            <img
+              id="bicubic-image"
+              src="assets/agrivision_train_0000_bicubic.png"
+              alt="Bicubic upscaled plant leaf baseline"
+            />
+          </div>
+          <div class="image-card">
+            <span>High-res target</span>
+            <img id="hr-image" src="assets/agrivision_train_0000_hr.png" alt="High-resolution plant leaf target" />
+          </div>
+        </div>
+      </section>
+
+      <section id="model" class="section">
+        <div class="section-head">
+          <p class="eyebrow">System Design</p>
+          <h2>Notebook logic converted into a reusable training pipeline.</h2>
+        </div>
+        <div class="pipeline">
+          <article>
+            <span>01</span>
+            <h3>Patch loader</h3>
+            <p>Pairs LR/HR files by filename, samples aligned patches, and applies flips/rotations.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>ESRGAN-lite generator</h3>
+            <p>Uses RRDB blocks and pixel shuffle upsampling to predict a residual over bicubic HR.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Hybrid objective</h3>
+            <p>Combines Charbonnier, residual, VGG perceptual, FFT, and low-weight adversarial losses.</p>
+          </article>
+          <article>
+            <span>04</span>
+            <h3>Inference</h3>
+            <p>Runs EMA checkpoints with 8-way test-time augmentation for submission generation.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="results" class="section results">
+        <div>
+          <p class="eyebrow">Measured Result</p>
+          <h2>Clear validation improvement over bicubic interpolation.</h2>
+          <p>
+            The original training run used a Tesla T4 with automatic mixed precision, cosine
+            scheduling, early stopping, EMA-smoothed generator weights, and top-k checkpoint
+            averaging.
+          </p>
+        </div>
+        <div class="result-table" role="table" aria-label="Validation MAE results">
+          <div role="row">
+            <span role="cell">Bicubic baseline</span>
+            <strong role="cell">18.20 MAE</strong>
+          </div>
+          <div role="row" class="highlight">
+            <span role="cell">LeafSR ESRGAN-lite</span>
+            <strong role="cell">16.89 MAE</strong>
+          </div>
+          <div role="row">
+            <span role="cell">Relative reduction</span>
+            <strong role="cell">7.2%</strong>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Built by Akshit Mehta</span>
+      <a href="https://github.com/BriskAM/leafsr">github.com/BriskAM/leafsr</a>
+    </footer>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
