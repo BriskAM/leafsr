@@ -19,3 +19,28 @@ jobs:
 
       - name: Syntax check
         run: python -m compileall scripts src tests
+
+      - name: Install runtime dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Model forward smoke test
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path("src").resolve()))
+
+          import torch
+          from leafsr.model import Discriminator, Generator
+
+          generator = Generator(channels=8, growth=4, num_rrdb=1, scale=4)
+          lr = torch.rand(2, 3, 8, 8)
+          bicubic = torch.rand(2, 3, 32, 32)
+          pred = generator(lr, bicubic)
+          assert pred.shape == bicubic.shape
+
+          discriminator = Discriminator(base=8)
+          score = discriminator(bicubic, pred)
+          assert score.shape[0] == 2
+          assert score.shape[1] == 1
+          PY

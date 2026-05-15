@@ -102,9 +102,31 @@
               alt="Bicubic upscaled plant leaf baseline"
             />
           </div>
+          <div class="image-card featured">
+            <span>LeafSR output</span>
+            <img
+              id="leafsr-image"
+              src="assets/predictions/agrivision_train_0000.png"
+              alt="LeafSR model prediction for plant leaf super-resolution"
+            />
+          </div>
           <div class="image-card">
             <span>High-res target</span>
             <img id="hr-image" src="assets/agrivision_train_0000_hr.png" alt="High-resolution plant leaf target" />
+          </div>
+        </div>
+        <div class="sample-metrics">
+          <div>
+            <span>Bicubic sample MAE</span>
+            <strong id="bicubic-mae">22.21</strong>
+          </div>
+          <div>
+            <span>LeafSR sample MAE</span>
+            <strong id="leafsr-mae">21.37</strong>
+          </div>
+          <div>
+            <span>Improvement</span>
+            <strong id="sample-gain">3.8%</strong>
           </div>
         </div>
       </section>
@@ -138,14 +160,30 @@
         </div>
       </section>
 
+      <section class="section architecture" aria-labelledby="architecture-title">
+        <div class="section-head">
+          <p class="eyebrow">Architecture</p>
+          <h2 id="architecture-title">Residual super-resolution over a strong classical baseline.</h2>
+        </div>
+        <div class="diagram">
+          <div>Low-res leaf</div>
+          <span></span>
+          <div>Bicubic 4x</div>
+          <span></span>
+          <div>RRDB generator predicts residual</div>
+          <span></span>
+          <div>LeafSR output</div>
+        </div>
+      </section>
+
       <section id="results" class="section results">
         <div>
           <p class="eyebrow">Measured Result</p>
           <h2>Clear validation improvement over bicubic interpolation.</h2>
           <p>
-            The original training run used a Tesla T4 with automatic mixed precision, cosine
-            scheduling, early stopping, EMA-smoothed generator weights, and top-k checkpoint
-            averaging.
+            The trained checkpoint used a Tesla T4 with automatic mixed precision, cosine
+            scheduling, early stopping, EMA-smoothed generator weights, and 8-way test-time
+            augmentation.
           </p>
         </div>
         <div class="result-table" role="table" aria-label="Validation MAE results">

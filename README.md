@@ -6,6 +6,8 @@ LeafSR packages a Kaggle/coursework experiment into a reproducible PyTorch proje
 
 Project site: <https://briskam.github.io/leafsr/>
 
+The project site includes real samples from the dataset and predictions generated from the trained checkpoint.
+
 ## Results
 
 Validation was measured with mean absolute error on held-out training images.
@@ -13,7 +15,7 @@ Validation was measured with mean absolute error on held-out training images.
 | Method | Validation MAE |
 | --- | ---: |
 | Bicubic baseline | 18.20 |
-| LeafSR ESRGAN-lite | 16.89 |
+| LeafSR ESRGAN-lite checkpoint | 16.89 |
 
 The original run used a Tesla T4, mixed precision, EMA-smoothed generator weights, top-k checkpoint averaging, and 8-way test-time augmentation.
 
@@ -63,6 +65,12 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+## Prepare Data
+
+```sh
+python scripts/prepare_data.py plant-leaves-super-resolution-challenge.zip --out-dir data
+```
+
 ## Train
 
 ```sh
@@ -107,6 +115,21 @@ python scripts/make_comparison.py \
   --lr-dir data/train_Low_Resolution \
   --hr-dir data/train_High_Resolution \
   --output assets/comparison_grid.png
+```
+
+The deployed frontend uses three real paired samples and precomputed predictions from the trained checkpoint:
+
+| Sample | Bicubic MAE | LeafSR MAE |
+| --- | ---: | ---: |
+| `agrivision_train_0000` | 22.21 | 21.37 |
+| `agrivision_train_0005` | 14.96 | 13.86 |
+| `agrivision_train_0010` | 20.21 | 18.85 |
+
+## Docker
+
+```sh
+docker build -t leafsr .
+docker run --rm -v "$PWD/data:/app/data" -v "$PWD/runs:/app/runs" leafsr
 ```
 
 ## Resume Bullet

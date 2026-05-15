@@ -260,7 +260,7 @@ h3 {
 
 .comparison {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1px;
   padding: 1px;
   border: 1px solid var(--line);
@@ -292,6 +292,40 @@ h3 {
   image-rendering: pixelated;
 }
 
+.image-card.featured {
+  background:
+    linear-gradient(180deg, rgba(121, 194, 103, 0.18), rgba(16, 28, 21, 0.9)),
+    var(--panel);
+}
+
+.sample-metrics {
+  display: grid;
+  grid-column: 2;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 1rem;
+  border: 1px solid var(--line);
+  background: var(--line);
+}
+
+.sample-metrics div {
+  padding: 1rem;
+  background: var(--panel);
+}
+
+.sample-metrics span {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.sample-metrics strong {
+  font-size: 1.6rem;
+}
+
 .section-head {
   max-width: 760px;
   margin-bottom: 2rem;
@@ -320,6 +354,42 @@ h3 {
 
 .pipeline p {
   font-size: 0.94rem;
+}
+
+.diagram {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr 40px 1.2fr 40px 1fr;
+  align-items: center;
+  gap: 0;
+}
+
+.diagram div {
+  min-height: 108px;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  color: var(--text);
+  font-weight: 900;
+  text-align: center;
+  background: var(--panel);
+}
+
+.diagram span {
+  height: 2px;
+  background: var(--leaf);
+}
+
+.diagram span::after {
+  display: block;
+  width: 10px;
+  height: 10px;
+  margin-top: -4px;
+  margin-left: auto;
+  content: "";
+  border-top: 2px solid var(--leaf);
+  border-right: 2px solid var(--leaf);
+  transform: rotate(45deg);
 }
 
 .result-table {
@@ -370,6 +440,25 @@ footer {
   .pipeline {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .sample-metrics {
+    grid-column: auto;
+  }
+
+  .diagram {
+    grid-template-columns: 1fr;
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+
+  .diagram div {
+    border: 0;
+  }
+
+  .diagram span {
+    display: none;
+  }
 }
 
 @media (max-width: 640px) {
@@ -385,7 +474,8 @@ footer {
 
   .metric-grid,
   .comparison,
-  .pipeline {
+  .pipeline,
+  .sample-metrics {
     grid-template-columns: 1fr;
   }
 
